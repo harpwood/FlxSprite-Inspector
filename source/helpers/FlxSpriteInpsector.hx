@@ -13,42 +13,40 @@ import helpers.graphics.DebugPoint;
 using flixel.util.FlxSpriteUtil;
 
 /**
- *----------------------------------------------------------------------------------------
- * Helper class for inspecting and manipulating properties of a sprite in HaxeFlixel.
- *----------------------------------------------------------------------------------------
- * @author Harpwood Studio
- * https://harpwood.itch.io/
- *----------------------------------------------------------------------------------------
- * Instructions:
- * 1. In the constructor, below the 'super.create();' line, replace 'DinoSprite' with the
- * 	  name of your custom FlxSprite class.
- * 2. Determine the desired values for offset, origin, and angle for your sprite.
- * 3. Implement these values in your sprite within your game.
- *----------------------------------------------------------------------------------------
- * Controls:
- * H						  : Toggle help visibility on/off
- * Mouse Wheel                : Zoom in/out.
- * Arrow Keys                 : Move the offset of the sprite by one pixel.
- * Shift + Arrow Keys         : Move the offset of the sprite by multiple pixels.
- *                              The amount will vary based on the zoom level.
- * Alt + Arrow Keys           : Move the origin of the sprite by one pixel.
- * Alt + Shift + Arrow Keys   : Move the origin of the sprite by multiple pixels.
- *                              The amount will vary based on the zoom level.
- * Ctrl + Arrow Keys          : Adjust the size of the sprite's hitbox by one pixel.
- * Ctrl + Shift + Arrow Keys  : Adjust the size of the sprite's hitbox by multiple pixels.
- *                              The amount will vary based on the zoom level.
- * Space                      : Resets all changes.
- * R                          : Toggle sprite rotation on/off.
- * A                          : Show and play previous animation.
- * D                          : Show and play next animation.
- * B                          : Darken the background.
- * Shift + B                  : Lighten the background.
- *----------------------------------------------------------------------------------------
+	*----------------------------------------------------------------------------------------
+	* Helper class for inspecting and manipulating properties of a sprite in HaxeFlixel.
+	*----------------------------------------------------------------------------------------
+	* @author Harpwood Studio
+	* https://harpwood.itch.io/
+	*----------------------------------------------------------------------------------------
+	* Instructions:
+	* 1. In the constructor, below the 'super.create();' line, replace 'DinoSprite' with the
+	* 	  name of your custom FlxSprite class.
+	* 2. Determine the desired values for offset, origin, and angle for your sprite.
+	* 3. Implement these values in your sprite within your game.
+	*----------------------------------------------------------------------------------------
+	* Controls:
+	* H						  : Toggle help visibility on/off
+	* Mouse Wheel                : Zoom in/out.
+	* Arrow Keys                 : Move the offset of the sprite by one pixel.
+	* Shift + Arrow Keys         : Move the offset of the sprite by multiple pixels.
+	*                              The amount will vary based on the zoom level.
+	* Alt + Arrow Keys           : Move the origin of the sprite by one pixel.
+	* Alt + Shift + Arrow Keys   : Move the origin of the sprite by multiple pixels.
+	*                              The amount will vary based on the zoom level.
+	* Ctrl + Arrow Keys          : Adjust the size of the sprite's hitbox by one pixel.
+	* Ctrl + Shift + Arrow Keys  : Adjust the size of the sprite's hitbox by multiple pixels.
+	*                              The amount will vary based on the zoom level.
+	* Space                      : Resets all changes.
+	* R                          : Toggle sprite rotation on/off.
+	* A                          : Show and play previous animation.
+	* D                          : Show and play next animation.
+	* B                          : Darken the background.
+	* Shift + B                  : Lighten the background.
+	*----------------------------------------------------------------------------------------
  */
-
 class FlxSpriteInpsector extends FlxState
 {
-
 	// Camera variables
 	var uiCamera:FlxCamera;
 	var gCamera:FlxCamera;
@@ -59,12 +57,12 @@ class FlxSpriteInpsector extends FlxState
 	var originText:FlxText;
 	var widthText:FlxText;
 	var heightText:FlxText;
+	var skewText:FlxText;
 	var helpText:FlxText;
 
 	// Color variables
 	var offsetColor:FlxColor;
 	var originColor:FlxColor;
-	var hitBoxColor:FlxColor;
 
 	// layers
 	var bgLayer:FlxSprite;
@@ -90,14 +88,14 @@ class FlxSpriteInpsector extends FlxState
 	var animIndex:Int;
 
 	/**
-	* The sprite to be inspected. It represents the object being inspected and
-	* can be an instance of a class that extends FlxSprite or a vanilla FlxSprite.
-	*/
+	 * The sprite to be inspected. It represents the object being inspected and
+	 * can be an instance of a class that extends FlxSprite or a vanilla FlxSprite.
+	 */
 	var sprite = null; // Dynamic
 
 	/**
-	* It initializes and sets up the state's objects and variables.
-	*/
+	 * It initializes and sets up the state's objects and variables.
+	 */
 	override public function create():Void
 	{
 		trace("Hello from FlxSprite Inspector!");
@@ -105,15 +103,12 @@ class FlxSpriteInpsector extends FlxState
 		super.create();
 
 		/**
-		* Create a new instance of the FlxSprite based class and assign it to the 'sprite' variable.
-		* Replace 'DinoSprite' with the name of your custom FlxSprite class.
-		*/
+		 * Create a new instance of the FlxSprite based class and assign it to the 'sprite' variable.
+		 * Replace 'DinoSprite' with the name of your custom FlxSprite class.
+		 */
 		sprite = new DinoSprite();
 
 		bgColor = FlxColor.WHITE;
-		offsetColor = FlxColor.GREEN;
-		originColor = FlxColor.BLUE;
-		hitBoxColor = FlxColor.RED;
 
 		// Initialize the cameras
 		initCameras();
@@ -124,7 +119,7 @@ class FlxSpriteInpsector extends FlxState
 		// create the elements of the inspector
 		bgLayer = new FlxSprite();
 		bgLayer.makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
-		bgLayer.setPosition( -FlxG.width, -FlxG.height);
+		bgLayer.setPosition(-FlxG.width, -FlxG.height);
 		bgLayer.alpha = .1;
 		add(bgLayer);
 
@@ -134,36 +129,43 @@ class FlxSpriteInpsector extends FlxState
 		statusText.cameras = [uiCamera];
 		add(statusText);
 
-		var bottomTextOffset = 35;
-		offsetText = new FlxText(0, FlxG.height - bottomTextOffset, FlxG.width * .2, "offset:[0000, 0000]", 20);
-		offsetText.color = offsetColor;
-		offsetText.alignment = "center";
-		offsetText.cameras = [uiCamera];
-		add(offsetText);
-
-		originText = new FlxText(FlxG.width * .2, FlxG.height - bottomTextOffset, FlxG.width * .2, "origin:[0000, 0000]", 20);
-		originText.color = originColor;
-		originText.alignment = "center";
-		originText.cameras = [uiCamera];
-		add(originText);
-
-		helpText = new FlxText(FlxG.width * .4, FlxG.height - bottomTextOffset, FlxG.width * .2, "Press H for help", 15);
-		helpText.color = FlxColor.BROWN;
+		helpText = new FlxText(FlxG.width * .4, statusText.height, FlxG.width * .2, "Press H for help", 15);
+		helpText.color = FlxColor.PURPLE;
 		helpText.alignment = "center";
 		helpText.cameras = [uiCamera];
 		add(helpText);
 
-		widthText = new FlxText(FlxG.width * .6, FlxG.height - bottomTextOffset, FlxG.width * .2, "width : 0000", 20);
-		widthText.color = FlxColor.GREEN;
-		widthText.alignment = "center";
+		var bottomTextOffset = 35;
+
+		widthText = new FlxText(0, FlxG.height - bottomTextOffset, FlxG.width * .2, "width : 0000", 18);
+		widthText.color = FlxColor.RED;
+		widthText.alignment = "left";
 		widthText.cameras = [uiCamera];
 		add(widthText);
 
-		heightText = new FlxText(FlxG.width * .8, FlxG.height - bottomTextOffset, FlxG.width * .2, "height : 0000", 20);
-		heightText.color = FlxColor.GREEN;
-		heightText.alignment = "center";
+		heightText = new FlxText(FlxG.width * .15, FlxG.height - bottomTextOffset, FlxG.width * .2, "height : 0000", 18);
+		heightText.color = FlxColor.RED;
+		heightText.alignment = "left";
 		heightText.cameras = [uiCamera];
 		add(heightText);
+
+		offsetText = new FlxText(FlxG.width * .35, FlxG.height - bottomTextOffset, FlxG.width * .2, "offset:[0000, 0000]", 18);
+		offsetText.color = FlxColor.GREEN;
+		offsetText.alignment = "left";
+		offsetText.cameras = [uiCamera];
+		add(offsetText);
+
+		originText = new FlxText(FlxG.width * .55, FlxG.height - bottomTextOffset, FlxG.width * .2, "origin:[0000, 0000]", 18);
+		originText.color = FlxColor.BLUE;
+		originText.alignment = "left";
+		originText.cameras = [uiCamera];
+		add(originText);
+
+		skewText = new FlxText(FlxG.width * .75, FlxG.height - bottomTextOffset, FlxG.width * .25, "skew:[0.0000, 0.0000]", 18);
+		skewText.color = FlxColor.ORANGE;
+		skewText.alignment = "left";
+		skewText.cameras = [uiCamera];
+		add(skewText);
 
 		helpScreen = new FlxGroup();
 		helpScreen.cameras = [uiCamera];
@@ -175,7 +177,9 @@ class FlxSpriteInpsector extends FlxState
 		helpBg.makeGraphic(FlxG.width, FlxG.height, 0x77000000);
 		helpScreen.add(helpBg);
 
-		var helpText:FlxText = new FlxText( 10, 100, 800, "Controls: \n \n H : Toggle help visibility on/off \n  \n Mouse Wheel: Zoom in/out. \n  \n Arrow Keys: Move the offset of the sprite by one pixel. \n Shift + Arrow Keys: Move the offset of the sprite by *multiple pixels. \n \n Alt + Arrow Keys: Move the origin of the sprite by one pixel. \n Alt + Shift + Arrow Keys : Move the origin of the sprite by *multiple pixels. \n \n Ctrl + Arrow Keys: Adjust the size of the sprite's hitbox by one pixel. \n Ctrl + Shift + Arrow Keys  : Adjust the size of the sprite's hitbox by *multiple pixels. \n \n Space: Resets all changes. \n \n R: Toggle sprite rotation on/off. \n \n A: Show and play previous animation. \n D: Show and play next animation. \n \n B: Darken the background. \n Shift + B: Lighten the background.\n \n \n *The amount will vary based on the zoom level.", 15);
+		var helpText:FlxText = new FlxText(10, 100, 800,
+			"Controls: \n \n H : Toggle help visibility on/off \n  \n Mouse Wheel: Zoom in/out. \n  \n Arrow Keys: Move the offset of the sprite by one pixel. \n Shift + Arrow Keys: Move the offset of the sprite by *multiple pixels. \n \n Alt + Arrow Keys: Move the origin of the sprite by one pixel. \n Alt + Shift + Arrow Keys : Move the origin of the sprite by *multiple pixels. \n \n Ctrl + Arrow Keys: Adjust the size of the sprite's hitbox by one pixel. \n Ctrl + Shift + Arrow Keys  : Adjust the size of the sprite's hitbox by *multiple pixels. \n \n Space: Resets all changes. \n \n R: Toggle sprite rotation on/off. \n \n A: Show and play previous animation. \n D: Show and play next animation. \n \n B: Darken the background. \n Shift + B: Lighten the background.\n \n \n *The amount will vary based on the zoom level.",
+			15);
 		helpText.color = FlxColor.WHITE;
 		helpScreen.add(helpText);
 
@@ -189,10 +193,10 @@ class FlxSpriteInpsector extends FlxState
 		sprite.screenCenter();
 		add(sprite);
 
-		offsetPoint = new DebugPoint(offsetColor);
+		offsetPoint = new DebugPoint(offsetText.color);
 		add(offsetPoint);
 
-		originPoint = new DebugPoint(originColor);
+		originPoint = new DebugPoint(originText.color);
 		add(originPoint);
 
 		// initialize variables
@@ -208,13 +212,17 @@ class FlxSpriteInpsector extends FlxState
 		if (animNames.length > 0)
 		{
 			sprite.animation.play(animNames[0]);
-			statusText.text = "The sprite has " + Std.string(animNames.length) + (animNames.length == 1 ? " animation : '" : " animations. Current : '") + sprite.animation.name + "'";
+			statusText.text = "The sprite has "
+				+ Std.string(animNames.length)
+				+ (animNames.length == 1 ? " animation : '" : " animations. Current : '")
+				+ sprite.animation.name
+				+ "'";
 		}
-		else statusText.text = "The sprite does not have any animation.";
+		else
+			statusText.text = "The sprite does not have any animation.";
 
 		// set the initial zoom
-		gCamera.zoom = FlxG.width >= FlxG.height ? (FlxG.width / sprite.width) * .4: (FlxG.height / sprite.height) * .4;
-
+		gCamera.zoom = FlxG.width >= FlxG.height ? (FlxG.width / sprite.width) * .4 : (FlxG.height / sprite.height) * .4;
 	}
 
 	override public function update(elapsed:Float):Void
@@ -223,7 +231,7 @@ class FlxSpriteInpsector extends FlxState
 
 		// draw the inpected sprite properties
 		hitBoxLayer.fill(FlxColor.TRANSPARENT);
-		hitBoxLayer.drawRect(sprite.x, sprite.y, sprite.width, sprite.height, FlxColor.TRANSPARENT, {color: hitBoxColor});
+		hitBoxLayer.drawRect(sprite.x, sprite.y, sprite.width, sprite.height, FlxColor.TRANSPARENT, {color: widthText.color});
 		originPoint.drawCross(sprite.x + sprite.origin.x, sprite.y + sprite.origin.y, 5);
 		offsetPoint.drawCross(sprite.x + sprite.offset.x, sprite.y + sprite.offset.y, 5);
 
@@ -237,15 +245,19 @@ class FlxSpriteInpsector extends FlxState
 		if (FlxG.mouse.wheel != 0)
 		{
 			var wheelValue:Int = FlxG.mouse.wheel;
-			if (wheelValue < -6) wheelValue = -6;
-			if (wheelValue > 6) wheelValue = 6;
-			
+			if (wheelValue < -6)
+				wheelValue = -6;
+			if (wheelValue > 6)
+				wheelValue = 6;
+
 			gCamera.zoom += (wheelValue);
 
 			// Limit the zoom within a certain range
-			if (gCamera.zoom < 0) gCamera.zoom = 0;
+			if (gCamera.zoom < 0)
+				gCamera.zoom = 0;
 			var maxZoom = FlxG.width >= FlxG.height ? (FlxG.width / sprite.width) * .8 : (FlxG.height / sprite.height) * .8;
-			if (gCamera.zoom > maxZoom) gCamera.zoom = maxZoom;
+			if (gCamera.zoom > maxZoom)
+				gCamera.zoom = maxZoom;
 
 			statusText.text = "Adjusting zoom";
 
@@ -266,8 +278,10 @@ class FlxSpriteInpsector extends FlxState
 		// Press B/Shift+B to adjust the background lightness
 		if (FlxG.keys.justPressed.B)
 		{
-			if (FlxG.keys.pressed.SHIFT) bgLayer.alpha = Math.max(0, bgLayer.alpha - 0.1);
-			else bgLayer.alpha = Math.min(1, bgLayer.alpha + 0.1);
+			if (FlxG.keys.pressed.SHIFT)
+				bgLayer.alpha = Math.max(0, bgLayer.alpha - 0.1);
+			else
+				bgLayer.alpha = Math.min(1, bgLayer.alpha + 0.1);
 
 			statusText.text = "Adjusting background lightness";
 		}
@@ -277,7 +291,8 @@ class FlxSpriteInpsector extends FlxState
 		{
 			animIndex--;
 
-			if (animIndex < 0) animIndex = animNames.length - 1;
+			if (animIndex < 0)
+				animIndex = animNames.length - 1;
 			sprite.animation.play(animNames[animIndex]);
 			statusText.text = "Playing animation : '" + sprite.animation.name + "'";
 		}
@@ -287,7 +302,8 @@ class FlxSpriteInpsector extends FlxState
 		{
 			animIndex++;
 
-			if (animIndex >= animNames.length) animIndex = 0;
+			if (animIndex >= animNames.length)
+				animIndex = 0;
 			sprite.animation.play(animNames[animIndex]);
 			statusText.text = "Playing animation : '" + sprite.animation.name + "'";
 		}
@@ -299,7 +315,8 @@ class FlxSpriteInpsector extends FlxState
 			if (FlxG.keys.pressed.SHIFT)
 			{
 				sprite.angle = 0;
-				if (canRotate) canRotate = false;
+				if (canRotate)
+					canRotate = false;
 
 				statusText.text = "Rotation has been reset.";
 			}
@@ -310,7 +327,8 @@ class FlxSpriteInpsector extends FlxState
 			}
 		}
 
-		if (canRotate) sprite.angle++;
+		if (canRotate)
+			sprite.angle++;
 
 		// Listen for short press on arrow keys
 		var jLeft:Int = FlxG.keys.justPressed.LEFT ? -1 : 0;
@@ -360,7 +378,8 @@ class FlxSpriteInpsector extends FlxState
 			keyTimer += elapsed;
 
 			// Check if enough time has passed while the key is held down
-			if (keyTimer < keyTimerDelay) return;
+			if (keyTimer < keyTimerDelay)
+				return;
 
 			// Use a differnt different modifier in this case
 			transformModifier = FlxG.keys.pressed.SHIFT ? Math.round(10 / (FlxG.camera.zoom * .5)) : 1;
@@ -418,7 +437,8 @@ class FlxSpriteInpsector extends FlxState
 			keyTimer += elapsed;
 
 			// Check if enough time has passed while the key is held down
-			if (keyTimer < keyTimerDelay) return;
+			if (keyTimer < keyTimerDelay)
+				return;
 
 			// Use a differnt different modifier in this case
 			transformModifier = FlxG.keys.pressed.SHIFT ? Math.round(10 / (FlxG.camera.zoom * .5)) : 1;
@@ -451,12 +471,12 @@ class FlxSpriteInpsector extends FlxState
 	}
 
 	/**
-	* Initializes the cameras used in the inspector.
-	* Creates a UI camera and a graphics camera with the same dimensions as the screen.
-	* Sets the background color of the game camera to white and the UI camera to transparent.
-	* Adds the graphics camera as the active camera.
-	* Adds the UI camera and sets it as the non-active camera.
-	*/
+	 * Initializes the cameras used in the inspector.
+	 * Creates a UI camera and a graphics camera with the same dimensions as the screen.
+	 * Sets the background color of the game camera to white and the UI camera to transparent.
+	 * Adds the graphics camera as the active camera.
+	 * Adds the UI camera and sets it as the non-active camera.
+	 */
 	function initCameras():Void
 	{
 		uiCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
@@ -468,5 +488,4 @@ class FlxSpriteInpsector extends FlxState
 		FlxG.cameras.reset(gCamera);
 		FlxG.cameras.add(uiCamera, false);
 	}
-
 }
