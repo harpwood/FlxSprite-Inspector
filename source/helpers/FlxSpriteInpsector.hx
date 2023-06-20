@@ -20,7 +20,7 @@ using flixel.util.FlxSpriteUtil;
  * https://harpwood.itch.io/
  *----------------------------------------------------------------------------------------
  * Instructions:
- * 1. In the constructor, below the 'super.create();' line, replace 'DinoSprite' with the 
+ * 1. In the constructor, below the 'super.create();' line, replace 'DinoSprite' with the
  * 	  name of your custom FlxSprite class.
  * 2. Determine the desired values for offset, origin, and angle for your sprite.
  * 3. Implement these values in your sprite within your game.
@@ -101,7 +101,7 @@ class FlxSpriteInpsector extends FlxState
 	override public function create():Void
 	{
 		trace("Hello from FlxSprite Inspector!");
-		
+
 		super.create();
 
 		/**
@@ -236,7 +236,11 @@ class FlxSpriteInpsector extends FlxState
 		// Use mouse wheel to zoom
 		if (FlxG.mouse.wheel != 0)
 		{
-			gCamera.zoom += (FlxG.mouse.wheel);
+			var wheelValue:Int = FlxG.mouse.wheel;
+			if (wheelValue < -6) wheelValue = -6;
+			if (wheelValue > 6) wheelValue = 6;
+			
+			gCamera.zoom += (wheelValue);
 
 			// Limit the zoom within a certain range
 			if (gCamera.zoom < 0) gCamera.zoom = 0;
@@ -244,6 +248,9 @@ class FlxSpriteInpsector extends FlxState
 			if (gCamera.zoom > maxZoom) gCamera.zoom = maxZoom;
 
 			statusText.text = "Adjusting zoom";
+
+			trace("FlxG.mouse.wheel : " + Std.string(FlxG.mouse.wheel));
+			trace("gCamera.zoom : " + Std.string(gCamera.zoom));
 		}
 
 		// Press SPACE to reset the changes
