@@ -9,6 +9,7 @@ import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import helpers.graphics.DebugPoint;
+import flixel.math.FlxAngle;
 
 using flixel.util.FlxSpriteUtil;
 
@@ -36,13 +37,15 @@ using flixel.util.FlxSpriteUtil;
 	*                              The amount will vary based on the zoom level.
 	* Ctrl + Arrow Keys          : Adjust the size of the sprite's hitbox by one pixel.
 	* Ctrl + Shift + Arrow Keys  : Adjust the size of the sprite's hitbox by multiple pixels.
-	*                              The amount will vary based on the zoom level.
-	* Space                      : Resets all changes.
+	* IJKL                       : Skew the sprite by one degree. 
+	* Shift + IJKL               : Skew the sprite by multiple degrees.
 	* R                          : Toggle sprite rotation on/off.
+	* Space                      : Resets all changes.
 	* A                          : Show and play previous animation.
 	* D                          : Show and play next animation.
 	* B                          : Darken the background.
 	* Shift + B                  : Lighten the background.
+	* *The amount will vary based on the zoom level.
 	*----------------------------------------------------------------------------------------
  */
 class FlxSpriteInpsector extends FlxState
@@ -161,7 +164,7 @@ class FlxSpriteInpsector extends FlxState
 		originText.cameras = [uiCamera];
 		add(originText);
 
-		skewText = new FlxText(FlxG.width * .75, FlxG.height - bottomTextOffset, FlxG.width * .25, "skew:[0.0000, 0.0000]", 18);
+		skewText = new FlxText(FlxG.width * .75, FlxG.height - bottomTextOffset, FlxG.width * .25, "skew:[0.000, 0.000]", 18);
 		skewText.color = FlxColor.ORANGE;
 		skewText.alignment = "left";
 		skewText.cameras = [uiCamera];
@@ -178,7 +181,7 @@ class FlxSpriteInpsector extends FlxState
 		helpScreen.add(helpBg);
 
 		var helpText:FlxText = new FlxText(10, 100, 800,
-			"Controls: \n \n H : Toggle help visibility on/off \n  \n Mouse Wheel: Zoom in/out. \n  \n Arrow Keys: Move the offset of the sprite by one pixel. \n Shift + Arrow Keys: Move the offset of the sprite by *multiple pixels. \n \n Alt + Arrow Keys: Move the origin of the sprite by one pixel. \n Alt + Shift + Arrow Keys : Move the origin of the sprite by *multiple pixels. \n \n Ctrl + Arrow Keys: Adjust the size of the sprite's hitbox by one pixel. \n Ctrl + Shift + Arrow Keys  : Adjust the size of the sprite's hitbox by *multiple pixels. \n \n Space: Resets all changes. \n \n R: Toggle sprite rotation on/off. \n \n A: Show and play previous animation. \n D: Show and play next animation. \n \n B: Darken the background. \n Shift + B: Lighten the background.\n \n \n *The amount will vary based on the zoom level.",
+			"Controls: \n \n H : Toggle help visibility on/off \n  \n Mouse Wheel: Zoom in/out. \n  \n Arrow Keys: Move the offset of the sprite by one pixel. \n Shift + Arrow Keys: Move the offset of the sprite by *multiple pixels. \n \n Alt + Arrow Keys: Move the origin of the sprite by one pixel. \n Alt + Shift + Arrow Keys : Move the origin of the sprite by *multiple pixels. \n \n Ctrl + Arrow Keys: Adjust the size of the sprite's hitbox by one pixel. \n Ctrl + Shift + Arrow Keys  : Adjust the size of the sprite's hitbox by *multiple pixels. \n \n IJKL: Skew the sprite by one degree. \n Shift + IJKL: Skew the sprite by multiple degrees. \n \n R: Toggle sprite rotation on/off. \n \n Space: Reset all changes. \n \n A: Show and play previous animation. \n D: Show and play next animation. \n \n B: Darken the background. \n Shift + B: Lighten the background.\n \n \n *The amount will vary based on the zoom level.",
 			15);
 		helpText.color = FlxColor.WHITE;
 		helpScreen.add(helpText);
@@ -270,6 +273,7 @@ class FlxSpriteInpsector extends FlxState
 		{
 			sprite.angle = 0;
 			canRotate = false;
+			sprite.skew.set(0, 0);
 			sprite.updateHitbox();
 
 			statusText.text = "Changes have been reset";
@@ -342,8 +346,60 @@ class FlxSpriteInpsector extends FlxState
 		var pUp:Int = FlxG.keys.pressed.UP ? -1 : 0;
 		var pDown:Int = FlxG.keys.pressed.DOWN ? 1 : 0;
 
+		// Listen for short press on the IKJL keys
+		var jI:Int = FlxG.keys.justPressed.I ? 1 : 0;
+		var pI:Int = FlxG.keys.pressed.I ? 1 : 0;
+		var jK:Int = FlxG.keys.justPressed.K ? 1 : 0;
+		var pK:Int = FlxG.keys.pressed.K ? 1 : 0;
+
+		// Listen for long press on the IKJL keys
+		var jJ:Int = FlxG.keys.justPressed.J ? 1 : 0;
+		var pJ:Int = FlxG.keys.pressed.J ? 1 : 0;
+		var jL:Int = FlxG.keys.justPressed.L ? 1 : 0;
+		var pL:Int = FlxG.keys.pressed.L ? 1 : 0;
+
 		// Hold SHIFT to apply the transform modifier
 		transformModifier = FlxG.keys.pressed.SHIFT ? Math.round(10 / (FlxG.camera.zoom * .25)) : 1;
+
+		if (jI + jK != 0)
+		{
+			keyTimer = 0; // Reset the timer of long press
+			sprite.skew.y += (jI - jK) * transformModifier;
+			statusText.text = "Adjusting skew.";
+		}
+
+		if (pI + pK != 0)
+		{
+			keyTimer += elapsed;
+
+			if (keyTimer < keyTimerDelay)
+				return;
+
+			transformModifier = FlxG.keys.pressed.SHIFT ? Math.round(10 / (FlxG.camera.zoom * .5)) : 1;
+
+			sprite.skew.y += (pI - pK) * transformModifier;
+			statusText.text = "Adjusting skew.";
+		}
+
+		if (jJ + jL != 0)
+		{
+			keyTimer = 0; // Reset the timer of long press
+			sprite.skew.x += (jJ - jL) * transformModifier;
+			statusText.text = "Adjusting skew.";
+		}
+
+		if (pJ + pL != 0)
+		{
+			keyTimer += elapsed;
+
+			if (keyTimer < keyTimerDelay)
+				return;
+
+			transformModifier = FlxG.keys.pressed.SHIFT ? Math.round(10 / (FlxG.camera.zoom * .5)) : 1;
+
+			sprite.skew.x += (pJ - pL) * transformModifier;
+			statusText.text = "Adjusting skew.";
+		}
 
 		// Check if either the LEFT or RIGHT arrow key has been pressed
 		if (jLeft + jRight != 0)
@@ -463,11 +519,12 @@ class FlxSpriteInpsector extends FlxState
 			}
 		}
 
-		// Update the text fields with the current sprite properties: offset, origin, width, and height.
-		offsetText.text = "offset : [" + Std.string(sprite.offset.x) + ", " + Std.string(sprite.offset.y) + "]";
-		originText.text = "origin : [" + Std.string(sprite.origin.x) + ", " + Std.string(sprite.origin.y) + "]";
-		widthText.text = "width : " + Std.string(sprite.width);
-		heightText.text = "height : " + Std.string(sprite.height);
+		// Update the text fields with the current sprite properties: offset, origin, width height, and skew.
+		widthText.text = 'width : [${Std.string(sprite.width)}]';
+		heightText.text = 'height : [${Std.string(sprite.height)}]';
+		offsetText.text = 'offset : [${Std.string(sprite.offset.x)}, ${Std.string(sprite.offset.y)}]';
+		originText.text = 'origin : [${Std.string(sprite.origin.x)}, ${Std.string(sprite.origin.y)}]';
+		skewText.text = 'skew : [${(Std.string(Math.tan(sprite.skew.x * FlxAngle.TO_RAD))).substring(0, 6)}, ${Std.string(Math.tan(sprite.skew.y * FlxAngle.TO_RAD)).substring(0, 6)}]';
 	}
 
 	/**
