@@ -57,6 +57,8 @@ if (launchInspector)
 - `Alt + Shift + Arrow Keys`: Move the origin of the sprite by multiple pixels. The amount varies based on the zoom level.
 - `Ctrl + Arrow Keys`: Adjust the size of the sprite's hitbox by one pixel.
 - `Ctrl + Shift + Arrow Keys`: Adjust the size of the sprite's hitbox by multiple pixels. The amount varies based on the zoom level.
+- 'IJKL': Skew the sprite by one degree. 
+- 'Shift + IJKL': Skew the sprite by multiple degrees.
 - `Space`: Reset all changes.
 - `R`: Toggle sprite rotation on/off.
 - `A`: Show and play the previous animation.
