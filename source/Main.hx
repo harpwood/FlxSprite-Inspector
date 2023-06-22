@@ -7,7 +7,6 @@ import com.spikything.utils.MouseWheelTrap;
 
 class Main extends Sprite
 {
-
 	public function new()
 	{
 		super();
@@ -19,11 +18,11 @@ class Main extends Sprite
 		#end
 
 		/**
-		* Add the following code snippet to your project to use the FlxSprite Inspector.
-		*
-		* @param launchInspector Set to `true` to launch the FlxSprite Inspector, or `false` to launch your game.
-		*/
-		var launchInspector :Bool = true;
+		 * Add the following code snippet to your project to use the FlxSprite Inspector.
+		 *
+		 * @param launchInspector Set to `true` to launch the FlxSprite Inspector, or `false` to launch your game.
+		 */
+		var launchInspector:Bool = true;
 
 		if (launchInspector)
 		{
@@ -31,10 +30,7 @@ class Main extends Sprite
 			return;
 		}
 		// End of code snippet
-		
+
 		addChild(new FlxGame(0, 0, PlayState));
-
 	}
-
 }
-
