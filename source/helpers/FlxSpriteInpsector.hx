@@ -27,7 +27,7 @@ using flixel.util.FlxSpriteUtil;
 	* 3. Implement these values in your sprite within your game.
 	*----------------------------------------------------------------------------------------
 	* Controls:
-	* H						  : Toggle help visibility on/off
+	* H						  	 : Toggle help visibility on/off
 	* Mouse Wheel                : Zoom in/out.
 	* Arrow Keys                 : Move the offset of the sprite by one pixel.
 	* Shift + Arrow Keys         : Move the offset of the sprite by multiple pixels.
@@ -524,7 +524,8 @@ class FlxSpriteInpsector extends FlxState
 		heightText.text = 'height : [${Std.string(sprite.height)}]';
 		offsetText.text = 'offset : [${Std.string(sprite.offset.x)}, ${Std.string(sprite.offset.y)}]';
 		originText.text = 'origin : [${Std.string(sprite.origin.x)}, ${Std.string(sprite.origin.y)}]';
-		skewText.text = 'skew : [${(Std.string(Math.tan(sprite.skew.x * FlxAngle.TO_RAD))).substring(0, 6)}, ${Std.string(Math.tan(sprite.skew.y * FlxAngle.TO_RAD)).substring(0, 6)}]';
+		//skewText.text = 'skew : [${(Std.string(Math.tan(sprite.skew.x * FlxAngle.TO_RAD))).substring(0, 6)}, ${Std.string(Math.tan(sprite.skew.y * FlxAngle.TO_RAD)).substring(0, 6)}]';
+		skewText.text = 'skew: [${(Std.string(sprite.skew.x)).substring(0, 6)}, ${(Std.string(sprite.skew.y)).substring(0, 6)}]';
 	}
 
 	/**
