@@ -70,6 +70,12 @@ This project is licensed under the [MIT License](LICENSE.md).
 
 Feel free to contribute, report issues, or suggest improvements by creating an issue or pull request in the repository.
 
+### Roadmap
+
+The FlxSprite Inspector was initially created to fulfill my personal needs as a lightweight and efficient tool for sprite inspection in HaxeFlixel games. I have decided to open source it to benefit the community. However, if there is sufficient interest and demand from the community, I am open to expanding the functionality and incorporating new features to provide a more comprehensive sprite debugging experience.
+
+Your feedback and support will be invaluable in shaping the future development of the FlxSprite Inspector. Stay tuned for updates and thank you for your interest!
+
 ### Support Me
 
 If you find the FlxSprite Inspector helpful and would like to support its development, you can consider the following:
@@ -82,18 +88,6 @@ If you find the FlxSprite Inspector helpful and would like to support its develo
 
 - **Contribute**: If you like to contribute to the project's development, you can submit pull requests with new features, bug fixes, or improvements. Contributions are always welcome!
 
-Your support is greatly appreciated, and it encourages the continuous improvement and maintenance of the FlxSprite Inspector. Thank you for your contribution!
-
-### Roadmap
-
-The FlxSprite Inspector was initially created to fulfill my personal needs as a lightweight and efficient tool for sprite inspection in HaxeFlixel games. I have decided to open source it to benefit the community. However, if there is sufficient interest and demand from the community, I am open to expanding the functionality and incorporating new features to provide a more comprehensive sprite debugging experience.
-
-Your feedback and support will be invaluable in shaping the future development of the FlxSprite Inspector. Stay tuned for updates and thank you for your interest!
-
-### Support Me
-
-If you find the FlxSprite Inspector helpful and would like to support its development, you can make a small donation:
-
 - On the [FlxSprite Inspector itch.io page](https://harpwood.itch.io/flxsprite-inspector): Click the "Support This FlxSprite Inspector" button and follow the instructions to contribute.
 
 - On the [GitHub repository](https://github.com/harpwood/FlxSprite-Inspector): Click the "Sponsor" button and choose a sponsorship tier that suits you.
@@ -101,7 +95,6 @@ If you find the FlxSprite Inspector helpful and would like to support its develo
 Your support is greatly appreciated and will help in maintaining and improving the Inspector. Thank you for your generosity!
 
 I believe that the FlxSprite Inspector will greatly enhance your experience in creating HaxeFlixel games. I hope you find it incredibly useful!
-
 
 
 ## Credits
