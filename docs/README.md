@@ -19,10 +19,10 @@ Please make sure that your project meets these prerequisites before incorporatin
 
 ### Installation
 
-1. Copy the `helpers` folder (package) and its contents into your `source` folder.![helpers](D:\Projects\Haxe\HaxeFlixel\FlxSpriteInspector\docs\helpers.png)
+1. Copy the `helpers` folder (package) and its contents into your `source` folder.![helpers](helpers.png)
 2. Enable the `flixel-addons` and `flixel-ui` libraries in your `Project.xml`. ![libraries](libraries.png)
 3. Optionally, copy the `inspector` folder and its contents into your projects `assets` folder.
-4. ![inspector](D:\Projects\Haxe\HaxeFlixel\FlxSpriteInspector\docs\inspector.png)
+4. ![inspector](inspector.png)
 
 That's it! The FlxSprite Inspector is now ready to be used in your project!
 
