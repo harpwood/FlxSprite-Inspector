@@ -18,10 +18,15 @@ To use FlxSprite Inspector in your HaxeFlixel projects, ensure that you have the
 Please make sure that your project meets these prerequisites before incorporating FlxSprite Inspector.
 
 ### Installation
-(update needed)
-Copy the `helpers` folder (package) and its contents into your `source` folder.
+
+1. Copy the `helpers` folder (package) and its contents into your `source` folder.![helpers](D:\Projects\Haxe\HaxeFlixel\FlxSpriteInspector\docs\helpers.png)
+2. Enable the `flixel-addons` and `flixel-ui` libraries in your `Project.xml`. ![libraries](libraries.png)
+3. Optionally, copy the `inspector` folder and its contents into your projects `assets` folder.
+4. ![inspector](D:\Projects\Haxe\HaxeFlixel\FlxSpriteInspector\docs\inspector.png)
 
 That's it! The FlxSprite Inspector is now ready to be used in your project!
+
+
 
 ### Usage
 
@@ -48,7 +53,9 @@ if (launchInspector)
    - Implement these values in your sprite within your game.
 
 ## Controls
-(update needed)
+
+The controls is deprecated and will be updated soon!
+
 - `H`: Toggle help visibility on/off
 - `Mouse Wheel`: Zoom in/out
 - `Arrow Keys`: Move the offset of the sprite by one pixel
