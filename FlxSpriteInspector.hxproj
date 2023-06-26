@@ -26,7 +26,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=5.3.1&#xA;openfl=9.2.2&#xA;lime=8.0.2&#xA;hscript=2.5.0&#xA;flixel-addons=3.1.1&#xA;flixel-ui=2.5.0&#xA;lime-openal&#xA;native&#xA;lime-curl&#xA;openfl-native&#xA;openfl-disable-handle-error&#xA;lime-harfbuzz&#xA;tools=8.0.2&#xA;lime-cairo&#xA;NAPE_NO_INLINE&#xA;lime-opengl&#xA;no-compilation&#xA;FLX_NO_TOUCH&#xA;lime-native&#xA;lime-vorbis&#xA;lime-cffi&#xA;fdb&#xA;windows&#xA;desktop" />
+    <option directives="flixel=5.3.1&#xA;openfl=9.2.2&#xA;lime=8.0.2&#xA;hscript=2.5.0&#xA;flixel-addons=3.1.1&#xA;flixel-ui=2.5.0&#xA;lime-openal&#xA;native&#xA;lime-curl&#xA;openfl-native&#xA;lime-harfbuzz&#xA;tools=8.0.2&#xA;lime-cairo&#xA;NAPE_NO_INLINE&#xA;FLX_NO_DEBUG&#xA;lime-opengl&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;FLX_NO_TOUCH&#xA;lime-native&#xA;lime-vorbis&#xA;lime-cffi&#xA;fdb&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

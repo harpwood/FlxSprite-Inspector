@@ -30,13 +30,13 @@ using flixel.util.FlxSpriteUtil;
 	* @author Harpwood Studio
 	* https://harpwood.itch.io/
 	*----------------------------------------------------------------------------------------
-	* Instructions:
+	* @deprecated Instructions:
 	* 1. In the constructor, below the 'super.create();' line, replace 'DinoSprite' with the
 	* 	  name of your custom FlxSprite class.
 	* 2. Determine the desired values for offset, origin, and angle for your sprite.
 	* 3. Implement these values in your sprite within your game.
 	*----------------------------------------------------------------------------------------
-	* @Deprecated Controls:
+	* @deprecated Controls:
 	* H						  	 : Toggle help visibility on/off
 	* Mouse Wheel                : Zoom in/out.
 	* Arrow Keys                 : Move the offset of the sprite by one pixel.
@@ -76,11 +76,16 @@ class FlxSpriteInpsector extends FlxState
 	var resetAngleBtn:FlxUIButton;
 	var prevAnimBtn:FlxUIButton;
 	var nextAnimBtn:FlxUIButton;
+	var decreaseAlphaSpriteBtn:FlxUIButton;
+	var increaseAlphaSpriteBtn:FlxUIButton;
+	var helpBtn:FlxUIButton;
 	var resetAllBtn:FlxUIButton;
 
 	// Check box
 	var showRadsCheckBox:FlxUICheckBox;
 	var showRadsCheck:Bool;
+	var flipXCheckBox:FlxUICheckBox;
+	var flipYCheckBox:FlxUICheckBox;
 
 	// Text elements
 	var statusText:FlxText;
@@ -90,10 +95,16 @@ class FlxSpriteInpsector extends FlxState
 	var heightText:FlxText;
 	var angleText:FlxText;
 	var skewText:FlxText;
-	var helpText:FlxText;
+	//var helpText:FlxText;
+	
+	// Labels
 	var taskLabel:FlxText;
 	var angleLabel:FlxText;
 	var animationLabel:FlxText;
+	var mirrorLabel:FlxText;
+	var alphaLabel:FlxText;
+	var miscLabel:FlxText;
+	
 
 	// Color variables
 	var offsetColor:FlxColor;
@@ -144,7 +155,7 @@ class FlxSpriteInpsector extends FlxState
 		trace("Hello from FlxSprite Inspector!");
 
 		super.create();
-		
+
 		//TODO FlxSkewedSprite
 
 		/**
@@ -252,13 +263,10 @@ class FlxSpriteInpsector extends FlxState
 		/*********************************************************************************
 		 * User Input
 		 */
+		
 		// Press 'H' to toggle the visibility of the help screen
-		if (FlxG.keys.justPressed.H)
-		{
-			//helpScreen.visible = !helpScreen.visible;
-			statusText.text = "The help section will be available in a future update.";
-		}
-
+		if (FlxG.keys.justPressed.H) toggleHelp();
+		
 		// Use mouse wheel to zoom
 		if (FlxG.mouse.wheel != 0)
 		{
@@ -349,8 +357,8 @@ class FlxSpriteInpsector extends FlxState
 
 				case 3: //SKEW_TASK
 					statusText.text = "Skew not available";
-					//sprite.skew.x += (jLeft + jRight) * transformModifier * invert;
-					//statusText.text = "Adjusting skew";
+				//sprite.skew.x += (jLeft + jRight) * transformModifier * invert;
+				//statusText.text = "Adjusting skew";
 
 				case 4: //ROTATE_TASK
 					if (canRotate)
@@ -395,8 +403,8 @@ class FlxSpriteInpsector extends FlxState
 
 				case 3: //SKEW_TASK
 					statusText.text = "Skew not available";
-					//sprite.skew.x += (pLeft + pRight) * transformModifier * invert;
-					//statusText.text = "Adjusting skew";
+				//sprite.skew.x += (pLeft + pRight) * transformModifier * invert;
+				//statusText.text = "Adjusting skew";
 
 				case 4: //ROTATE_TASK
 					if (canRotate)
@@ -435,8 +443,8 @@ class FlxSpriteInpsector extends FlxState
 
 				case 3: //SKEW_TASK
 					statusText.text = "Skew not available";
-					//sprite.skew.y += (jUp + jDown) * transformModifier * invert;
-					//statusText.text = "Adjusting skew.";
+				//sprite.skew.y += (jUp + jDown) * transformModifier * invert;
+				//statusText.text = "Adjusting skew.";
 
 				case 4: //ROTATE_TASK
 					sprite.angle += (jUp + jDown) * transformModifier * invert;
@@ -474,8 +482,8 @@ class FlxSpriteInpsector extends FlxState
 
 				case 3: //SKEW_TASK
 					statusText.text = "Skew not available";
-					//sprite.skew.y += (pUp + pDown) * transformModifier * invert;
-					//statusText.text = "Adjusting skew";
+				//sprite.skew.y += (pUp + pDown) * transformModifier * invert;
+				//statusText.text = "Adjusting skew";
 
 				case 4: //ROTATE_TASK
 					sprite.angle += (pUp + pDown) * transformModifier * invert;
@@ -586,6 +594,45 @@ class FlxSpriteInpsector extends FlxState
 		sprite.animation.play(animNames[animIndex]);
 		statusText.text = "Playing animation : '" + sprite.animation.name + "'";
 	}
+	
+	/**
+	* Toggles the flipX sprite property based on the state of the checkbox.
+	*/
+	function toggleFlipX()
+	{
+		sprite.flipX = flipXCheckBox.checked;
+		if (sprite.flipX) statusText.text = "Sprite flipX enabled.";
+		else statusText.text = "Sprite flipX disabled.";
+	}
+	
+	/**
+	* Toggles the flipY sprite property based on the state of the checkbox.
+	*/
+	function toggleFlipY()
+	{
+		sprite.flipY = flipYCheckBox.checked;
+		if (sprite.flipY) statusText.text = "Sprite flipY enabled.";
+		else statusText.text = "Sprite flipY disabled.";
+	}
+	
+	function decreaseAplha()
+	{
+		decreaseAlphaSpriteBtn.toggled = false;
+		sprite.alpha = Math.max(0, sprite.alpha - 0.1);
+	}
+	
+	function increaseAlpha()
+	{
+		increaseAlphaSpriteBtn.toggled = false;
+		sprite.alpha = Math.min(1, sprite.alpha + 0.1);
+	}
+	
+	function toggleHelp()
+	{
+		helpBtn.toggled = false;
+		//helpScreen.visible = !helpScreen.visible;
+		statusText.text = "The help section will be available in a future update.";
+	}
 
 	/**
 	* Resets all changes made to the sprite's properties, including angle, rotation, skew, and hitbox.
@@ -597,9 +644,14 @@ class FlxSpriteInpsector extends FlxState
 		canRotate = false;
 		//sprite.skew.set(0, 0);
 		sprite.updateHitbox();
+		sprite.flipX = flipXCheckBox.checked = false;
+		sprite.flipY = flipYCheckBox.checked = false;
+		sprite.alpha = 1;
 
 		statusText.text = "Changes have been reset";
 	}
+	
+	
 
 	/****************************************************
 	 * 					CAMERAS
@@ -634,7 +686,7 @@ class FlxSpriteInpsector extends FlxState
 	function createUIAreas():Void
 	{
 		var uiAreasColor:FlxColor = 0xffa0c4e4;
-		var statusArea:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, FlxG.width, 50));
+		var statusArea:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, FlxG.width, 30));
 		statusArea.color = uiAreasColor;
 		ui.add(statusArea);
 
@@ -642,7 +694,7 @@ class FlxSpriteInpsector extends FlxState
 		bottomTextArea.color = uiAreasColor;
 		ui.add(bottomTextArea);
 
-		var buttonsArea:FlxUI9SliceSprite = new FlxUI9SliceSprite(10, 100, null, new Rectangle(0, 0, 150, 450));
+		var buttonsArea:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 30, null, new Rectangle(0, 0, 150, 600));
 		buttonsArea.color = uiAreasColor;
 		ui.add(buttonsArea);
 	}
@@ -658,11 +710,11 @@ class FlxSpriteInpsector extends FlxState
 		statusText.alignment = "center";
 		ui.add(statusText);
 
-		helpText = new FlxText(FlxG.width * .4, 5 + statusText.height, FlxG.width * .2, "Press H for help", 12);
-		helpText.color = FlxColor.WHITE;
-		helpText.alpha = 0.7;
-		helpText.alignment = "center";
-		ui.add(helpText);
+		//helpText = new FlxText(FlxG.width * .4, 5 + statusText.height, FlxG.width * .2, "Press H for help", 12);
+		//helpText.color = FlxColor.WHITE;
+		//helpText.alpha = 0.7;
+		//helpText.alignment = "center";
+		//ui.add(helpText);
 
 		var bottomTextOffset:Int = 35;
 		var textSize:Int = 16;
@@ -710,16 +762,17 @@ class FlxSpriteInpsector extends FlxState
 	function createUIIntreactiveItems():Void
 	{
 		var btnColor:FlxColor = 0xff728da3;
-		var uiY:Int = 110;
+		var uiX:Int = 10;
+		var uiY:Int = 40;
 		var stepY:Int = 35;
 
-		taskLabel = new FlxText(10, uiY, 150, "TASKS", 12);
+		taskLabel = new FlxText(0, uiY, 150, "TASKS", 12);
 		taskLabel.color = FlxColor.WHITE;
 		taskLabel.alignment = "center";
 		ui.add(taskLabel);
 
 		uiY += 20;
-		offsetBtn = new FlxUIButton(20, uiY, "offset", function () {toggleButtons(OFFSET_TASK);}, true, false, btnColor);
+		offsetBtn = new FlxUIButton(uiX, uiY, "offset", function () {toggleButtons(OFFSET_TASK);}, true, false, btnColor);
 		offsetBtn.cameras = [uiCamera];
 		offsetBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		offsetBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
@@ -727,55 +780,55 @@ class FlxSpriteInpsector extends FlxState
 		offsetBtn.toggled = true;
 
 		uiY += stepY;
-		originBtn = new FlxUIButton(20, uiY, "origin", function () {toggleButtons(ORIGIN_TASK);}, true, false, btnColor);
+		originBtn = new FlxUIButton(uiX, uiY, "origin", function () {toggleButtons(ORIGIN_TASK);}, true, false, btnColor);
 		originBtn.cameras = [uiCamera];
 		originBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		originBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(originBtn);
 
 		uiY += stepY;
-		hitboxBtn = new FlxUIButton(20, uiY, "hitbox", function () {toggleButtons(HITBOX_TASK);}, true, false, btnColor);
+		hitboxBtn = new FlxUIButton(uiX, uiY, "hitbox", function () {toggleButtons(HITBOX_TASK);}, true, false, btnColor);
 		hitboxBtn.cameras = [uiCamera];
 		hitboxBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		hitboxBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(hitboxBtn);
 
 		uiY += stepY;
-		angleBtn = new FlxUIButton(20, uiY, "angle", function () {toggleButtons(ROTATE_TASK);}, true, false, btnColor);
+		angleBtn = new FlxUIButton(uiX, uiY, "angle", function () {toggleButtons(ROTATE_TASK);}, true, false, btnColor);
 		angleBtn.cameras = [uiCamera];
 		angleBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		angleBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(angleBtn);
 
 		uiY += stepY;
-		skewBtn = new FlxUIButton(20, uiY, "skew", function () {toggleButtons(SKEW_TASK);}, true, false, btnColor);
+		skewBtn = new FlxUIButton(uiX, uiY, "skew", function () {toggleButtons(SKEW_TASK);}, true, false, btnColor);
 		skewBtn.cameras = [uiCamera];
 		skewBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		skewBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(skewBtn);
 
 		uiY += stepY + 5;
-		angleLabel = new FlxText(10, uiY, 150, "ANGLE", 12);
+		angleLabel = new FlxText(0, uiY, 150, "ANGLE", 12);
 		angleLabel.color = FlxColor.WHITE;
 		angleLabel.alignment = "center";
 		ui.add(angleLabel);
 
 		uiY += stepY - 15;
-		autoRotateBtn = new FlxUIButton(20, uiY, "auto rotate", toggleRotation, true, false, btnColor);
+		autoRotateBtn = new FlxUIButton(uiX, uiY, "auto rotate", toggleRotation, true, false, btnColor);
 		autoRotateBtn.cameras = [uiCamera];
 		autoRotateBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		autoRotateBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(autoRotateBtn);
 
 		uiY += stepY;
-		resetAngleBtn = new FlxUIButton(20, uiY, "reset angle", resetAngle, true, false, btnColor);
+		resetAngleBtn = new FlxUIButton(uiX, uiY, "reset angle", resetAngle, true, false, btnColor);
 		resetAngleBtn.cameras = [uiCamera];
 		resetAngleBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		resetAngleBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(resetAngleBtn);
 
 		uiY += stepY;
-		showRadsCheckBox = new FlxUICheckBox(20, uiY, null, null, "show radians", 130, null, toggleShowRadians);
+		showRadsCheckBox = new FlxUICheckBox(uiX, uiY, null, null, "show radians", 130, null, toggleShowRadians);
 		showRadsCheckBox.cameras = [uiCamera];
 		showRadsCheckBox.button.setLabelFormat(null, 12, FlxColor.WHITE, "center");
 		showRadsCheckBox.button.x -= 7;
@@ -783,31 +836,83 @@ class FlxSpriteInpsector extends FlxState
 		ui.add(showRadsCheckBox);
 
 		uiY += stepY - 10;
-		animationLabel = new FlxText(10, uiY, 150, "ANIMATION", 12);
+		animationLabel = new FlxText(0, uiY, 150, "ANIMATION", 12);
 		animationLabel.color = FlxColor.WHITE;
 		animationLabel.alignment = "center";
 		ui.add(animationLabel);
 
 		uiY += stepY - 15;
-		prevAnimBtn = new FlxUIButton(20, uiY, "prev", previousAnimation, true, false, btnColor);
+		prevAnimBtn = new FlxUIButton(uiX, uiY, "prev", previousAnimation, true, false, btnColor);
 		prevAnimBtn.cameras = [uiCamera];
 		prevAnimBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		prevAnimBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(prevAnimBtn);
-		nextAnimBtn = new FlxUIButton(90, uiY, "next", nextAnimation, true, false, btnColor);
+		
+		nextAnimBtn = new FlxUIButton(80, uiY, "next", nextAnimation, true, false, btnColor);
 		nextAnimBtn.cameras = [uiCamera];
 		nextAnimBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		nextAnimBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(nextAnimBtn);
+		
+		uiY += stepY + 5;
+		mirrorLabel = new FlxText(0, uiY, 150, "MIRROR", 12);
+		mirrorLabel.color = FlxColor.WHITE;
+		mirrorLabel.alignment = "center";
+		ui.add(mirrorLabel);
 
+		uiY += stepY - 15;
+		flipXCheckBox = new FlxUICheckBox(uiX, uiY, null, null, "flipX", 45, null, toggleFlipX);
+		flipXCheckBox.cameras = [uiCamera];
+		flipXCheckBox.button.setLabelFormat(null, 12, FlxColor.WHITE, "center");
+		flipXCheckBox.button.y -= 4;
+		ui.add(flipXCheckBox);
+
+		flipYCheckBox = new FlxUICheckBox(80, uiY, null, null, "flipY", 45, null, toggleFlipY);
+		flipYCheckBox.cameras = [uiCamera];
+		flipYCheckBox.button.setLabelFormat(null, 12, FlxColor.WHITE, "center");
+		flipYCheckBox.button.y -= 4;
+		ui.add(flipYCheckBox);
+		
+		uiY += stepY - 10;
+		alphaLabel = new FlxText(0, uiY, 150, "ALPHA", 12);
+		alphaLabel.color = FlxColor.WHITE;
+		alphaLabel.alignment = "center";
+		ui.add(alphaLabel);
+		
+		uiY += stepY - 15;
+		decreaseAlphaSpriteBtn = new FlxUIButton(uiX, uiY, "-", decreaseAplha, true, false, btnColor);
+		decreaseAlphaSpriteBtn.cameras = [uiCamera];
+		decreaseAlphaSpriteBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		decreaseAlphaSpriteBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
+		ui.add(decreaseAlphaSpriteBtn);
+		
+		increaseAlphaSpriteBtn = new FlxUIButton(80, uiY, "+", increaseAlpha, true, false, btnColor);
+		increaseAlphaSpriteBtn.cameras = [uiCamera];
+		increaseAlphaSpriteBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		increaseAlphaSpriteBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
+		ui.add(increaseAlphaSpriteBtn);
+		
 		uiY += stepY + 10;
-		resetAllBtn = new FlxUIButton(20, uiY, "reset all changes", resetChanges, true, false, btnColor);
+		miscLabel = new FlxText(0, uiY, 150, "MISCELLANEOUS", 12);
+		miscLabel.color = FlxColor.WHITE;
+		miscLabel.alignment = "center";
+		ui.add(miscLabel);
+	
+		uiY += stepY - 15;
+		helpBtn = new FlxUIButton(uiX, uiY, "help (WIP)", toggleHelp, true, false, btnColor);
+		helpBtn.cameras = [uiCamera];
+		helpBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		helpBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
+		ui.add(helpBtn);
+		
+		uiY += stepY;
+		resetAllBtn = new FlxUIButton(uiX, uiY, "reset sprite", resetChanges, true, false, btnColor);
 		resetAllBtn.cameras = [uiCamera];
-		resetAllBtn.loadGraphicSlice9(null, 130, 40, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		resetAllBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		resetAllBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(resetAllBtn);
 	}
-
+	
 	/****************************************************
 	 * 					HELP SCREEN
 	 */
