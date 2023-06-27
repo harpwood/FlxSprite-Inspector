@@ -19,7 +19,7 @@ Please make sure that your project meets these prerequisites before incorporatin
 
 ### Installation
 
-**Important Note:** Please refrain from using the code directly from the repository as it may contain broken or unstable features. Instead, it is highly recommended to download and use the latest stable release from the ["Releases" section](https://github.com/harpwood/FlxSprite-Inspector/releases/tag/Release-20230627) located in the right column of the repository's page. This ensures you have access to the most reliable and tested version of the FlxSprite Inspector. Thank you for your understanding and support!
+**Important Note:** Please refrain from using the code directly from the repository as it may contain broken or unstable features. Instead, it is highly recommended to download and use the latest stable release from the ["Releases" section](https://github.com/harpwood/FlxSprite-Inspector/releases) located in the right column of the repository's page. This ensures you have access to the most reliable and tested version of the FlxSprite Inspector. Thank you for your understanding and support!
 
 1. Copy the `helpers` folder (package) and its contents into your `source` folder.<img src="D:\Projects\Haxe\HaxeFlixel\FlxSpriteInspector\docs\helpers.png" alt="helpers" style="zoom:75%;" />
 
