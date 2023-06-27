@@ -4,7 +4,6 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxAngle;
-import sys.ssl.Key;
 
 import flixel.group.FlxGroup;
 
