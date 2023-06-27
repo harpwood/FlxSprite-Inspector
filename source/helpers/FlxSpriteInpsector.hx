@@ -4,20 +4,21 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxAngle;
+import sys.ssl.Key;
 
 import flixel.group.FlxGroup;
 
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import helpers.graphics.DebugPoint;
+import helpers.ui.ClickArea;
 
 import flixel.FlxState;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUICheckBox;
-import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.addons.ui.StrNameLabel;
 import flixel.addons.ui.FlxUIGroup;
+import flixel.addons.ui.FlxInputText;
 
 import openfl.geom.Rectangle;
 
@@ -78,6 +79,7 @@ class FlxSpriteInpsector extends FlxState
 	var nextAnimBtn:FlxUIButton;
 	var decreaseAlphaSpriteBtn:FlxUIButton;
 	var increaseAlphaSpriteBtn:FlxUIButton;
+	var updateHitBoxBtn:FlxUIButton;
 	var helpBtn:FlxUIButton;
 	var resetAllBtn:FlxUIButton;
 
@@ -95,8 +97,15 @@ class FlxSpriteInpsector extends FlxState
 	var heightText:FlxText;
 	var angleText:FlxText;
 	var skewText:FlxText;
+	var alphaText:FlxText;
 	//var helpText:FlxText;
-	
+
+	// Text input
+	var textInputs:Array<FlxInputText> = [];
+	var scaleXInput:FlxInputText;
+	var scaleYInput:FlxInputText;
+	var alphaInput:FlxInputText;
+
 	// Labels
 	var taskLabel:FlxText;
 	var angleLabel:FlxText;
@@ -104,7 +113,9 @@ class FlxSpriteInpsector extends FlxState
 	var mirrorLabel:FlxText;
 	var alphaLabel:FlxText;
 	var miscLabel:FlxText;
-	
+	var scaleLabel:FlxText;
+	var scaleXLabel:FlxText;
+	var scaleYLabel:FlxText;
 
 	// Color variables
 	var offsetColor:FlxColor;
@@ -263,10 +274,31 @@ class FlxSpriteInpsector extends FlxState
 		/*********************************************************************************
 		 * User Input
 		 */
-		
+
+		if (FlxG.keys.justPressed.TAB)
+		{
+			var index:Int = getInputTextFocusIntex();
+			
+			if (index == -1) textInputs[0].hasFocus = true;
+			else
+			{
+				textInputs[index].hasFocus = false;
+				
+				if (index == 0)
+				{
+					sprite.alpha = Math.min(1, Std.parseFloat(alphaInput.text));
+					alphaInput.text = Std.string(sprite.alpha);
+				}
+				
+				var lastIndex:Int = textInputs.length - 1;
+				textInputs[(index >= lastIndex) ? 0 : index + 1].hasFocus = true;
+				
+			}
+		}
+
 		// Press 'H' to toggle the visibility of the help screen
 		if (FlxG.keys.justPressed.H) toggleHelp();
-		
+
 		// Use mouse wheel to zoom
 		if (FlxG.mouse.wheel != 0)
 		{
@@ -502,9 +534,11 @@ class FlxSpriteInpsector extends FlxState
 		offsetText.text = 'offset : [${sprite.offset.x}, ${sprite.offset.y}]';
 		originText.text = 'origin : [${sprite.origin.x}, ${sprite.origin.y}]';
 		var angle:String = showRadsCheck ? Std.string(sprite.angle * FlxAngle.TO_RAD).substring(0, 6) : Std.string(sprite.angle);
-		angleText.text = 'angle : ' + angle;
+		angleText.text = 'angle : [${angle}]';
+		alphaText.text = 'alpha : [${sprite.alpha}]';
 		//skewText.text = 'skew: [${(Std.string(sprite.skew.x)).substring(0, 6)}, ${(Std.string(sprite.skew.y)).substring(0, 6)}]';
 		skewText.text = 'skew: n/a';
+
 	}
 
 	/****************************************************
@@ -594,40 +628,42 @@ class FlxSpriteInpsector extends FlxState
 		sprite.animation.play(animNames[animIndex]);
 		statusText.text = "Playing animation : '" + sprite.animation.name + "'";
 	}
-	
+
 	/**
 	* Toggles the flipX sprite property based on the state of the checkbox.
 	*/
-	function toggleFlipX()
+	function toggleFlipX():Void
 	{
 		sprite.flipX = flipXCheckBox.checked;
 		if (sprite.flipX) statusText.text = "Sprite flipX enabled.";
 		else statusText.text = "Sprite flipX disabled.";
 	}
-	
+
 	/**
 	* Toggles the flipY sprite property based on the state of the checkbox.
 	*/
-	function toggleFlipY()
+	function toggleFlipY():Void
 	{
 		sprite.flipY = flipYCheckBox.checked;
 		if (sprite.flipY) statusText.text = "Sprite flipY enabled.";
 		else statusText.text = "Sprite flipY disabled.";
 	}
-	
-	function decreaseAplha()
+
+	function decreaseAplha():Void
 	{
 		decreaseAlphaSpriteBtn.toggled = false;
 		sprite.alpha = Math.max(0, sprite.alpha - 0.1);
+		alphaInput.text = Std.string(sprite.alpha);
 	}
-	
-	function increaseAlpha()
+
+	function increaseAlpha():Void
 	{
 		increaseAlphaSpriteBtn.toggled = false;
 		sprite.alpha = Math.min(1, sprite.alpha + 0.1);
+		alphaInput.text = Std.string(sprite.alpha);
 	}
-	
-	function toggleHelp()
+
+	function toggleHelp():Void
 	{
 		helpBtn.toggled = false;
 		//helpScreen.visible = !helpScreen.visible;
@@ -640,18 +676,41 @@ class FlxSpriteInpsector extends FlxState
 	function resetChanges():Void
 	{
 		resetAllBtn.toggled = false;
+
+		sprite.scale.set(1, 1);
+		scaleXInput.text = Std.string(sprite.scale.x);
+		scaleYInput.text = Std.string(sprite.scale.y);
+		
+		sprite.alpha = 1;
+		alphaInput.text = Std.string(sprite.alpha);
+
 		sprite.angle = 0;
 		canRotate = false;
 		//sprite.skew.set(0, 0);
 		sprite.updateHitbox();
 		sprite.flipX = flipXCheckBox.checked = false;
 		sprite.flipY = flipYCheckBox.checked = false;
-		sprite.alpha = 1;
+
+		
 
 		statusText.text = "Changes have been reset";
 	}
 	
+	function hasInputTextFocus():Bool
+	{
+		return alphaInput.hasFocus || scaleXInput.hasFocus || scaleYInput.hasFocus;
+	}
 	
+	function getInputTextFocusIntex():Int
+	{
+		
+		for (i in 0...textInputs.length)
+		{
+			if (textInputs[i].hasFocus) return i;
+		}
+		
+		return -1;
+	}
 
 	/****************************************************
 	 * 					CAMERAS
@@ -694,7 +753,7 @@ class FlxSpriteInpsector extends FlxState
 		bottomTextArea.color = uiAreasColor;
 		ui.add(bottomTextArea);
 
-		var buttonsArea:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 30, null, new Rectangle(0, 0, 150, 600));
+		var buttonsArea:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 30, null, new Rectangle(0, 0, 150, 669));
 		buttonsArea.color = uiAreasColor;
 		ui.add(buttonsArea);
 	}
@@ -717,39 +776,46 @@ class FlxSpriteInpsector extends FlxState
 		//ui.add(helpText);
 
 		var bottomTextOffset:Int = 35;
-		var textSize:Int = 16;
-		var spc:Int = Math.round((FlxG.width - 50) / 6);
-		widthText = new FlxText(25, FlxG.height - bottomTextOffset, spc, "width : 0000", textSize);
+		var textSize:Int = 12;
+		var spc:Int = Math.round((FlxG.width - 20) / 7);
+		var textX:Int = 10;
+		widthText = new FlxText(textX, FlxG.height - bottomTextOffset, spc, "width : 0000", textSize);
 		widthText.color = FlxColor.RED;
 		widthText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 1);
 		widthText.alignment = "left";
 		ui.add(widthText);
 
-		heightText = new FlxText(25 + spc, FlxG.height - bottomTextOffset, spc, "height : 0000", textSize);
+		heightText = new FlxText(textX + spc, FlxG.height - bottomTextOffset, spc, "height : 0000", textSize);
 		heightText.color = FlxColor.RED;
 		heightText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 1);
 		heightText.alignment = "left";
 		ui.add(heightText);
 
-		offsetText = new FlxText(25 + spc * 2, FlxG.height - bottomTextOffset, spc, "offset:[0000, 0000]", textSize);
+		offsetText = new FlxText(textX + spc * 2, FlxG.height - bottomTextOffset, spc, "offset:[0000, 0000]", textSize);
 		offsetText.color = FlxColor.GREEN;
 		offsetText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 1);
 		offsetText.alignment = "left";
 		ui.add(offsetText);
 
-		originText = new FlxText(25 + spc * 3, FlxG.height - bottomTextOffset, spc, "origin:[0000, 0000]", textSize);
+		originText = new FlxText(textX + spc * 3, FlxG.height - bottomTextOffset, spc, "origin:[0000, 0000]", textSize);
 		originText.color = FlxColor.BLUE;
 		originText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 1);
 		originText.alignment = "left";
 		ui.add(originText);
 
-		angleText = new FlxText(50 + spc * 4, FlxG.height - bottomTextOffset, spc - 10, "angle:[0.000, 0.000]", textSize);
+		angleText = new FlxText(textX + spc * 4, FlxG.height - bottomTextOffset, spc - 10, "angle:[0.000, 0.000]", textSize);
 		angleText.color = FlxColor.PURPLE;
 		angleText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 1);
 		angleText.alignment = "left";
 		ui.add(angleText);
 
-		skewText = new FlxText(25 + spc * 5, FlxG.height - bottomTextOffset, spc, "skew:[0.000, 0.000]", textSize);
+		alphaText = new FlxText(textX + spc * 5, FlxG.height - bottomTextOffset, spc, "alpha: 0.00", textSize);
+		alphaText.color = FlxColor.MAGENTA;
+		alphaText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 1);
+		alphaText.alignment = "left";
+		ui.add(alphaText);
+
+		skewText = new FlxText(textX + spc * 6, FlxG.height - bottomTextOffset, spc, "skew:[0.000, 0.000]", textSize);
 		skewText.color = FlxColor.BROWN;
 		skewText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 1);
 		skewText.alignment = "left";
@@ -772,7 +838,7 @@ class FlxSpriteInpsector extends FlxState
 		ui.add(taskLabel);
 
 		uiY += 20;
-		offsetBtn = new FlxUIButton(uiX, uiY, "offset", function () {toggleButtons(OFFSET_TASK);}, true, false, btnColor);
+		offsetBtn = new FlxUIButton(uiX, uiY, "offset", ()->{toggleButtons(OFFSET_TASK);}, true, false, btnColor);
 		offsetBtn.cameras = [uiCamera];
 		offsetBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		offsetBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
@@ -780,28 +846,28 @@ class FlxSpriteInpsector extends FlxState
 		offsetBtn.toggled = true;
 
 		uiY += stepY;
-		originBtn = new FlxUIButton(uiX, uiY, "origin", function () {toggleButtons(ORIGIN_TASK);}, true, false, btnColor);
+		originBtn = new FlxUIButton(uiX, uiY, "origin", ()->{toggleButtons(ORIGIN_TASK);}, true, false, btnColor);
 		originBtn.cameras = [uiCamera];
 		originBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		originBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(originBtn);
 
 		uiY += stepY;
-		hitboxBtn = new FlxUIButton(uiX, uiY, "hitbox", function () {toggleButtons(HITBOX_TASK);}, true, false, btnColor);
+		hitboxBtn = new FlxUIButton(uiX, uiY, "hitbox", ()->{toggleButtons(HITBOX_TASK);}, true, false, btnColor);
 		hitboxBtn.cameras = [uiCamera];
 		hitboxBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		hitboxBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(hitboxBtn);
 
 		uiY += stepY;
-		angleBtn = new FlxUIButton(uiX, uiY, "angle", function () {toggleButtons(ROTATE_TASK);}, true, false, btnColor);
+		angleBtn = new FlxUIButton(uiX, uiY, "angle", ()->{toggleButtons(ROTATE_TASK);}, true, false, btnColor);
 		angleBtn.cameras = [uiCamera];
 		angleBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		angleBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(angleBtn);
 
 		uiY += stepY;
-		skewBtn = new FlxUIButton(uiX, uiY, "skew", function () {toggleButtons(SKEW_TASK);}, true, false, btnColor);
+		skewBtn = new FlxUIButton(uiX, uiY, "skew", ()->{toggleButtons(SKEW_TASK);}, true, false, btnColor);
 		skewBtn.cameras = [uiCamera];
 		skewBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		skewBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
@@ -847,13 +913,13 @@ class FlxSpriteInpsector extends FlxState
 		prevAnimBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		prevAnimBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(prevAnimBtn);
-		
+
 		nextAnimBtn = new FlxUIButton(80, uiY, "next", nextAnimation, true, false, btnColor);
 		nextAnimBtn.cameras = [uiCamera];
 		nextAnimBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		nextAnimBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(nextAnimBtn);
-		
+
 		uiY += stepY + 5;
 		mirrorLabel = new FlxText(0, uiY, 150, "MIRROR", 12);
 		mirrorLabel.color = FlxColor.WHITE;
@@ -872,39 +938,172 @@ class FlxSpriteInpsector extends FlxState
 		flipYCheckBox.button.setLabelFormat(null, 12, FlxColor.WHITE, "center");
 		flipYCheckBox.button.y -= 4;
 		ui.add(flipYCheckBox);
-		
+
 		uiY += stepY - 10;
 		alphaLabel = new FlxText(0, uiY, 150, "ALPHA", 12);
 		alphaLabel.color = FlxColor.WHITE;
 		alphaLabel.alignment = "center";
 		ui.add(alphaLabel);
-		
+
 		uiY += stepY - 15;
 		decreaseAlphaSpriteBtn = new FlxUIButton(uiX, uiY, "-", decreaseAplha, true, false, btnColor);
 		decreaseAlphaSpriteBtn.cameras = [uiCamera];
-		decreaseAlphaSpriteBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		decreaseAlphaSpriteBtn.loadGraphicSlice9(null, 30, 25, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		decreaseAlphaSpriteBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(decreaseAlphaSpriteBtn);
-		
-		increaseAlphaSpriteBtn = new FlxUIButton(80, uiY, "+", increaseAlpha, true, false, btnColor);
+
+		alphaInput = new FlxInputText(uiX + 40, uiY + 2, 50, "", 12, FlxColor.BLACK, FlxColor.WHITE);
+		alphaInput.cameras = [uiCamera];
+		alphaInput.borderColor = 0xff000000;
+		alphaInput.customFilterPattern = ~/[^0-9.]*/g;
+		alphaInput.filterMode = FlxInputText.CUSTOM_FILTER;
+		alphaInput.callback = (input:String, key:String) -> {
+			var countDots:Int = 0;
+			for (i in 0...input.length)
+			{
+				if (input.charAt(i) == ".") countDots++;
+				if (countDots > 1)
+				{
+					input = input.substring(0, i);
+					alphaInput.text = input;
+					alphaInput.caretIndex--;
+					return;
+				}
+			}
+
+			if (key == FlxInputText.ENTER_ACTION)
+			{
+				sprite.alpha = Math.min(1, Std.parseFloat(input));
+				alphaInput.text = Std.string(sprite.alpha);
+
+				alphaInput.hasFocus = false;
+			}
+
+			sprite.alpha = input == "" ? sprite.alpha : Std.parseFloat(input);
+		};
+		alphaInput.text = Std.string(sprite.alpha);
+		textInputs.push(alphaInput);
+		ui.add(alphaInput);
+		var alphaFocus = new ClickArea(uiX + 40, uiY + 2, 50, 30, ()->{ alphaInput.hasFocus = true; });
+		ui.add(alphaFocus);
+
+		increaseAlphaSpriteBtn = new FlxUIButton(110, uiY, "+", increaseAlpha, true, false, btnColor);
 		increaseAlphaSpriteBtn.cameras = [uiCamera];
-		increaseAlphaSpriteBtn.loadGraphicSlice9(null, 60, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		increaseAlphaSpriteBtn.loadGraphicSlice9(null, 30, 25, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		increaseAlphaSpriteBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(increaseAlphaSpriteBtn);
-		
-		uiY += stepY + 10;
+
+		uiY += stepY;
+		scaleLabel = new FlxText(0, uiY, 150, "SCALE", 12);
+		scaleLabel.color = FlxColor.WHITE;
+		scaleLabel.alignment = "center";
+		ui.add(scaleLabel);
+
+		uiY += stepY - 15;
+		scaleXLabel = new FlxText(5, uiY, 15, "X", 12);
+		scaleXLabel.color = FlxColor.WHITE;
+		scaleXLabel.alignment = "center";
+		ui.add(scaleXLabel);
+
+		scaleYLabel = new FlxText(75, uiY, 15, "Y", 12);
+		scaleYLabel.color = FlxColor.WHITE;
+		scaleYLabel.alignment = "center";
+		ui.add(scaleYLabel);
+
+		scaleXInput = new FlxInputText(uiX + 10, uiY, 50, "", 12, FlxColor.BLACK, FlxColor.WHITE);
+		scaleXInput.cameras = [uiCamera];
+		scaleXInput.borderColor = 0xff000000;
+		scaleXInput.customFilterPattern = ~/[^0-9.-]*/g;
+		scaleXInput.filterMode = FlxInputText.CUSTOM_FILTER;
+		scaleXInput.callback = (input:String, key:String) -> {
+			var countDots:Int = 0;
+			for (i in 0...input.length)
+			{
+				if (input.charAt(i) == ".") countDots++;
+				if (countDots > 1)
+				{
+					input = input.substring(0, i);
+					scaleXInput.text = input;
+					scaleXInput.caretIndex--;
+					return;
+				}
+
+				if (input.charAt(i) == "-" && i != 0)
+				{
+					input = input.substring(0, i);
+					scaleXInput.text = input;
+					scaleXInput.caretIndex--;
+					return;
+				}
+
+				if (key == FlxInputText.ENTER_ACTION) scaleXInput.hasFocus = false;
+			}
+
+			sprite.scale.x = (input == "" || input == "-") ? sprite.scale.x : Std.parseFloat(input);
+		};
+		scaleXInput.text = Std.string(sprite.scale.x);
+		textInputs.push(scaleXInput);
+		ui.add(scaleXInput);
+		var scaleXfocus = new ClickArea(uiX + 10, uiY, 50, 30, ()->{ scaleXInput.hasFocus = true; });
+		ui.add(scaleXfocus);
+
+		scaleYInput = new FlxInputText(80 + 10, uiY, 50, "", 12, FlxColor.BLACK, FlxColor.WHITE);
+		scaleYInput.cameras = [uiCamera];
+		scaleYInput.borderColor = 0xff000000;
+		scaleYInput.customFilterPattern = ~/[^0-9.]*/g;
+		scaleYInput.filterMode = FlxInputText.CUSTOM_FILTER;
+		scaleYInput.callback = (input:String, key:String) -> {
+			var countDots:Int = 0;
+			for (i in 0...input.length)
+			{
+				if (input.charAt(i) == ".") countDots++;
+				if (countDots > 1)
+				{
+					input = input.substring(0, i);
+					scaleYInput.text = input;
+					scaleYInput.caretIndex--;
+					return;
+				}
+				
+				if (input.charAt(i) == "-" && i != 0)
+				{
+					input = input.substring(0, i);
+					scaleYInput.text = input;
+					scaleYInput.caretIndex--;
+					return;
+				}
+
+				if (key == FlxInputText.ENTER_ACTION) scaleYInput.hasFocus = false;
+			}
+			sprite.scale.y = input == "" ? sprite.scale.y : Std.parseFloat(input);
+		};
+		scaleYInput.text = Std.string(sprite.scale.y);
+		textInputs.push(scaleYInput);
+		ui.add(scaleXInput);
+		ui.add(scaleYInput);
+		var scaleYfocus = new ClickArea(80 + 10, uiY, 50, 30, ()->{ scaleYInput.hasFocus = true; });
+		ui.add(scaleYfocus);
+
+		uiY += stepY;
 		miscLabel = new FlxText(0, uiY, 150, "MISCELLANEOUS", 12);
 		miscLabel.color = FlxColor.WHITE;
 		miscLabel.alignment = "center";
 		ui.add(miscLabel);
-	
+		
 		uiY += stepY - 15;
+		updateHitBoxBtn = new FlxUIButton(uiX, uiY, "updateHitbox", ()->{updateHitBoxBtn.toggled = false; sprite.updateHitbox(); } , true, false, btnColor);
+		updateHitBoxBtn.cameras = [uiCamera];
+		updateHitBoxBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		updateHitBoxBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
+		ui.add(updateHitBoxBtn);
+
+		uiY += stepY;
 		helpBtn = new FlxUIButton(uiX, uiY, "help (WIP)", toggleHelp, true, false, btnColor);
 		helpBtn.cameras = [uiCamera];
 		helpBtn.loadGraphicSlice9(null, 130, 30, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		helpBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(helpBtn);
-		
+
 		uiY += stepY;
 		resetAllBtn = new FlxUIButton(uiX, uiY, "reset sprite", resetChanges, true, false, btnColor);
 		resetAllBtn.cameras = [uiCamera];
@@ -912,7 +1111,7 @@ class FlxSpriteInpsector extends FlxState
 		resetAllBtn.setLabelFormat(null, 14, FlxColor.WHITE, "center");
 		ui.add(resetAllBtn);
 	}
-	
+
 	/****************************************************
 	 * 					HELP SCREEN
 	 */

@@ -13,7 +13,9 @@ import flixel.addons.effects.FlxSkewedSprite;
  * Twitter: https://twitter.com/ArksDigital
  * Dino Characters on itch.io : https://arks.itch.io/dino-characters
  * 
- * This sprite is provided for demonstration reasons. 
+ * This sprite is provided for demonstration reasons.
+ * You may delete this class and its assets and provide
+ * to FlxSprite inspector your own sprites.
  */
 class DinoSprite extends FlxSprite //TODO FlxSkewedSprite 
 {
