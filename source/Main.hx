@@ -31,10 +31,10 @@ class Main extends Sprite
 			 */
 
 			// Launches the default inspector.
-			addChild(new FlxGame(1024, 748, helpers.FlxSpriteInpsector));
+			//addChild(new FlxGame(1024, 748, helpers.FlxSpriteInpsector));
 
 			// Launches the Skew-capable inspector. 
-			//addChild(new FlxGame(1024, 748, helpers.FlxSkewedSpriteInspector));
+			addChild(new FlxGame(1024, 748, helpers.FlxSkewedSpriteInspector));
 
 			return;
 		}

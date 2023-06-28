@@ -257,7 +257,9 @@ class FlxSpriteInpsectorBase extends FlxState
 		 * draw the inpected sprite properties
 		 */
 		hitBoxLayer.fill(FlxColor.TRANSPARENT);
-		hitBoxLayer.drawRect(sprite.x, sprite.y, sprite.width, sprite.height, FlxColor.TRANSPARENT, {color: widthText.color});
+		
+		if (sprite.width > 0 || sprite.height > 0) // @fixed: 0 width and 0 height crashes on neko
+			hitBoxLayer.drawRect(sprite.x, sprite.y, sprite.width, sprite.height, FlxColor.TRANSPARENT, {color: widthText.color});
 		originPoint.drawCross(sprite.x + sprite.origin.x, sprite.y + sprite.origin.y, 5);
 		offsetPoint.drawCross(sprite.x + sprite.offset.x, sprite.y + sprite.offset.y, 5);
 
