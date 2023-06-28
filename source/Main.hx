@@ -2,7 +2,6 @@ package;
 
 import flixel.FlxGame;
 import openfl.display.Sprite;
-import helpers.FlxSpriteInpsector;
 import com.spikything.utils.MouseWheelTrap;
 
 class Main extends Sprite
@@ -26,11 +25,22 @@ class Main extends Sprite
 
 		if (launchInspector)
 		{
-			addChild(new FlxGame(1024, 748, FlxSpriteInpsector));
+			/**
+			 * Launches the FlxSprite Inspector with skew capabilities or the default inspector.
+			 * Leave only one `addChild` uncommented based on your desired inspector.
+			 */
+
+			// Launches the default inspector.
+			addChild(new FlxGame(1024, 748, helpers.FlxSpriteInpsector));
+
+			// Launches the Skew-capable inspector. 
+			//addChild(new FlxGame(1024, 748, helpers.FlxSkewedSpriteInspector));
+
 			return;
 		}
 		// End of code snippet
 
+		// You game starts from here
 		addChild(new FlxGame(0, 0, PlayState));
 	}
 }

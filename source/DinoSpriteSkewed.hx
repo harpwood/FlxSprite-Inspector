@@ -1,7 +1,7 @@
 package;
 
-import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.addons.effects.FlxSkewedSprite;
 
 /**
  * ...
@@ -16,7 +16,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  * You may delete this class and its assets and provide
  * to FlxSprite inspector your own sprites.
  */
-class DinoSprite extends FlxSprite
+class DinoSpriteSkewed extends FlxSkewedSprite 
 {
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{

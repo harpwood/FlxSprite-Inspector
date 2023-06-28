@@ -1,8 +1,6 @@
 package;
 
-import flixel.FlxG;
 import flixel.FlxState;
-import helpers.FlxSpriteInpsector;
 
 class PlayState extends FlxState
 {
