@@ -40,22 +40,35 @@ That's it! The FlxSprite Inspector is now ready to be used in your project!
 1. In the `Main.hx` file of your project, add the following code snippet before creating a new `FlxGame()` instance:
 
 ```haxe
+// Set to `true` to launch the FlxSprite Inspector, or `false` to launch your game
 var launchInspector:Bool = true;
-
 if (launchInspector)
 {
-	addChild(new FlxGame(1024, 748, FlxSpriteInpsector));
+	/**
+	* Launches the FlxSprite Inspector with skew capabilities or the default inspector.
+	* Leave only one `addChild` uncommented based on your desired inspector.
+	*/
+	// Launches the default inspector.
+	addChild(new FlxGame(1024, 748, helpers.FlxSpriteInpsector));
+
+	// Launches the Skew-capable inspector. 
+	//addChild(new FlxGame(1024, 748, helpers.FlxSkewedSpriteInspector));
+
 	return;
 }
+// End of code snippet
 ```
 
 > Note: The dimensions `1024x748` are recommended but not  mandatory. You can adjust the width and height to match your game's  resolution. If the Inspector does not look good on your game's  resolution, you can switch to the recommended dimensions.
 
 2. Set the `launchInspector` variable to `true` when you want to use the FlxSprite Inspector. Set it to `false` to start your game as usual.
+3. Leave uncommented the type of inspector you want to use and comment any other option. 
+   - For the default inspector leave uncommented the `addChild(new FlxGame(1024, 748, helpers.FlxSpriteInpsector));` code line
+   - For the skew-capable inspector leave uncommented the `addChild(new FlxGame(1024, 748, helpers.FlxSkewedSpriteInspector));` code line
+   - Leave only one `addChild` uncommented based on your desired inspector.
+4. In the `helpers/FlxSpriteInpsector.hx` and `helpers/FlxSkewedSpriteInspector.hx` files:
 
-3. In the `helpers/FlxSpriteInspector.hx` file:
-
-   - In the constructor, below the `super.create();` line, replace `DinoSprite` with the name of your custom `FlxSprite` class.
+   - In the `override public function create():Void` , above the `super.create();` line, replace `DinoSprite` with the name of your custom `FlxSprite` or `FlxSkewed` class.
    - Determine the desired values for offset, origin, and angle for your sprite.
    - Implement these values in your sprite within your game.
 
