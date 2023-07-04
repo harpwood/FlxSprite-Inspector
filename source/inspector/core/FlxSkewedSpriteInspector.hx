@@ -1,4 +1,5 @@
-package helpers;
+package inspector.core;
+import inspector.core.FlxSpriteInpsector;
 
 /**
  * ...
@@ -6,7 +7,7 @@ package helpers;
  * https://harpwood.itch.io/
  */
 
-class FlxSkewedSpriteInspector extends FlxSpriteInpsectorBase
+class FlxSkewedSpriteInspector extends FlxSpriteInpsector
 {
 	public function new(){super();}
 	

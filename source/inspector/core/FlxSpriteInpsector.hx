@@ -1,16 +1,17 @@
-package helpers;
+package inspector.core;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxAngle;
+import inspector.Sprite;
 
 import flixel.group.FlxGroup;
 
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import helpers.graphics.DebugPoint;
-import helpers.ui.ClickArea;
+import inspector.graphics.DebugPoint;
+import inspector.ui.components.ClickArea;
 
 import flixel.FlxState;
 import flixel.addons.ui.FlxUIButton;
@@ -58,7 +59,7 @@ using flixel.util.FlxSpriteUtil;
 	* *The amount will vary based on the zoom level.
 	*----------------------------------------------------------------------------------------
  */
-class FlxSpriteInpsectorBase extends FlxState
+class FlxSpriteInpsector extends Sprite
 {
 	// Camera variables
 	var uiCamera:FlxCamera;
@@ -155,7 +156,7 @@ class FlxSpriteInpsectorBase extends FlxState
 	 * The sprite to be inspected. It represents the object being inspected and
 	 * can be an instance of a class that extends FlxSprite or a vanilla FlxSprite.
 	 */
-	var sprite = null; // Dynamic
+	//var sprite = null; // Dynamic
 
 	/**
 	 * It initializes and sets up the state's objects and variables.
@@ -201,8 +202,8 @@ class FlxSpriteInpsectorBase extends FlxState
 		 * The sprite to be inspected.
 		 * See under the 'super.create();' for details
 		 */
-		sprite.screenCenter();
-		add(sprite);
+		//sprite.screenCenter();
+		//add(sprite);
 
 		// Debug points that can be represented visually
 		offsetPoint = new DebugPoint(offsetText.color);
@@ -714,6 +715,9 @@ class FlxSpriteInpsectorBase extends FlxState
 
 		FlxG.cameras.reset(gCamera);
 		FlxG.cameras.add(uiCamera, false);
+		
+		uiCamera.pixelPerfectRender = true;
+		gCamera.pixelPerfectRender = true;
 	}
 
 	/****************************************************
@@ -745,7 +749,7 @@ class FlxSpriteInpsectorBase extends FlxState
 	function createUITexts():Void
 	{
 		// Texts
-		statusText = new FlxText(0, 5, FlxG.width, "Hello from HaxeFlixel", 15);
+		statusText = new FlxText(0, 5, FlxG.width, "Welcome to FlxSprite Inspector!", 15);
 		statusText.color = FlxColor.WHITE;
 		statusText.alignment = "center";
 		ui.add(statusText);

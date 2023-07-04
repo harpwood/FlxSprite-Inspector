@@ -22,7 +22,7 @@ class DinoSprite extends FlxSprite
 	{
 		super(X, Y, SimpleGraphic);
 
-		loadGraphic("assets/inspector/spr/dino.png", true, 24, 24);
+		loadGraphic("assets/inspector/dino.png", true, 24, 24, true);
 
 		animation.add("idle", [0, 1, 2, 3], 7);
 		animation.add("move", [4, 5, 6, 7, 8, 9], 7);

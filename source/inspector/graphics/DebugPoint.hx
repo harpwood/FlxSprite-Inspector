@@ -1,4 +1,4 @@
-package helpers.graphics;
+package inspector.graphics;
 
 import flixel.FlxSprite;
 import flixel.util.FlxColor;

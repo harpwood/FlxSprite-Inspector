@@ -1,6 +1,10 @@
 
 
-![banner](banner.png)FlxSprite Inspector is a lightweight and efficient tool designed for sprite inspection in HaxeFlixel games. It provides a convenient way to visualize and manipulate the properties of FlxSprite objects, such as offset, origin, rotation, and hitbox, during runtime. The Inspector enhances the debugging and fine-tuning process, allowing developers to optimize the visual aspects of their game sprites. It is meant to be used within HaxeFlixel projects and offers intuitive controls for easy interaction. Contributions and feedback from the community are welcome to improve and expand the functionality of the FlxSprite Inspector.
+![banner](banner.png)
+
+> **Important Note:** This project is constantly evolving, and its structure is subject to change. To stay up to date with the latest installation and usage instructions, please refer to this README regularly. We are committed to improving and enhancing the project, ensuring a seamless experience for all users. Thank you for your understanding and ongoing support!
+
+FlxSprite Inspector is a lightweight and efficient tool designed for sprite inspection in HaxeFlixel games. It provides a convenient way to visualize and manipulate the properties of FlxSprite objects, such as offset, origin, rotation, and hitbox, during runtime. The Inspector enhances the debugging and fine-tuning process, allowing developers to optimize the visual aspects of their game sprites. It is meant to be used within HaxeFlixel projects and offers intuitive controls for easy interaction. Contributions and feedback from the community are welcome to improve and expand the functionality of the FlxSprite Inspector.
 
 ##### You can test the FlxSprite Inspector directly on your browser by visiting the [FlxSprite Inspector's itch.io page](https://harpwood.itch.io/flxsprite-inspector). 
 
@@ -19,15 +23,16 @@ Please make sure that your project meets these prerequisites before incorporatin
 
 ### Installation
 
-**Important Note:** Please refrain from using the code directly from the repository as it may contain broken or unstable features. Instead, it is highly recommended to download and use the latest stable release from the ["Releases" section](https://github.com/harpwood/FlxSprite-Inspector/releases) located in the right column of the repository's page. This ensures you have access to the most reliable and tested version of the FlxSprite Inspector. Thank you for your understanding and support!
+> **Important Note:** Please refrain from using the code directly from the repository as it may contain broken or unstable features. Instead, it is highly recommended to download and use the latest stable release from the ["Releases" section](https://github.com/harpwood/FlxSprite-Inspector/releases) located in the right column of the repository's page. This ensures you have access to the most reliable and tested version of the FlxSprite Inspector. Thank you for your understanding and support!
 
-1. Copy the `helpers` folder (package) and its contents into your `source` folder.
+
+1. Copy the `(source/)inspector` folder (package) and its contents into your `source` folder.
 
 2. Enable the `flixel-addons` and `flixel-ui` libraries in your `Project.xml`. <img src="libraries.png" alt="libraries" style="zoom:75%;" />
 
-3. Optionally, copy the `inspector` folder and its contents into your projects `assets` folder.
+3. Optionally, copy the `(assets/)inspector` folder and its contents into your projects `assets` folder.
 
-4. Optionally copy the `DinoSprite.hx` and `DinoSpriteSkewed.hx` file into the root of the `source` folder.
+4. Optionally copy the `DinoSprite.hx` and `DinoSpriteSkewed.hx` files into the root of the `source` folder.
 
 That's it! The FlxSprite Inspector is now ready to be used in your project!
 
@@ -47,11 +52,13 @@ if (launchInspector)
 	* Leave only one `addChild` uncommented based on your desired inspector.
 	*/
 	// Launches the default inspector.
-	addChild(new FlxGame(1024, 748, helpers.FlxSpriteInpsector));
+	addChild(new FlxGame(1024, 748, inspector.core.FlxSpriteInpsector));
 
 	// Launches the Skew-capable inspector. 
-	//addChild(new FlxGame(1024, 748, helpers.FlxSkewedSpriteInspector));
-
+	//addChild(new FlxGame(1024, 748, inspector.core.FlxSkewedSpriteInspector));
+			
+	// Launches the ColorMatrixFilterInspector
+	//addChild(new FlxGame(1024, 748, inspector.core.ColorMatrixFilterInspector));
 	return;
 }
 // End of code snippet
@@ -61,18 +68,19 @@ if (launchInspector)
 
 2. Set the `launchInspector` variable to `true` when you want to use the FlxSprite Inspector. Set it to `false` to start your game as usual.
 3. Leave uncommented the type of inspector you want to use and comment any other option. 
-   - For the default inspector leave uncommented the `addChild(new FlxGame(1024, 748, helpers.FlxSpriteInpsector));` code line
-   - For the skew-capable inspector leave uncommented the `addChild(new FlxGame(1024, 748, helpers.FlxSkewedSpriteInspector));` code line
+   - For the default inspector leave uncommented the `addChild(new FlxGame(1024, 748, inspector.core.FlxSpriteInpsector));` code line
+   - For the skew-capable inspector leave uncommented the `addChild(new FlxGame(1024, 748, inspector.core.FlxSkewedSpriteInspector));` code line
+   - For the Color Matrix Filter inspector `addChild(new FlxGame(1024, 748, inspector.core.ColorMatrixFilterInspector));` code line
    - Leave only one `addChild` uncommented based on your desired inspector.
-4. In the `helpers/FlxSpriteInpsector.hx` and `helpers/FlxSkewedSpriteInspector.hx` files:
+4. In the `source/inspector/Sprite.hx` file:
 
-   - In the `override public function create():Void` , above the `super.create();` line, replace `DinoSprite` with the name of your custom `FlxSprite` or `FlxSkewed` class.
+   - In the `function initSprite():Void` , under the **!!!IMPORTANT!!!** comment lines, replace `DinoSprite` or `DinoSpriteSkewed` with the name of your custom `FlxSprite` or `FlxSkewedSprite` class.
    - Determine the desired values for offset, origin, and angle for your sprite.
    - Implement these values in your sprite within your game.
 
 ## Controls
 
-The controls is deprecated and will be updated soon!
+**The controls are deprecated and will be updated after the UI revamp!**
 
 - `H`: Toggle help visibility on/off
 - `Mouse Wheel`: Zoom in/out
