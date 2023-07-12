@@ -1,19 +1,15 @@
 package inspector.core;
 
+import inspector.Sprite;
+import inspector.graphics.DebugPoint;
+import inspector.ui.components.ClickArea;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxAngle;
-import inspector.Sprite;
-
 import flixel.group.FlxGroup;
-
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import inspector.graphics.DebugPoint;
-import inspector.ui.components.ClickArea;
-
-import flixel.FlxState;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUICheckBox;
@@ -163,7 +159,7 @@ class FlxSpriteInpsector extends Sprite
 	 */
 	override public function create():Void
 	{
-		trace("Hello from FlxSprite Inspector!");
+		//trace("Hello from FlxSprite Inspector!");
 
 		super.create();
 
@@ -520,7 +516,7 @@ class FlxSpriteInpsector extends Sprite
 		originText.text = 'origin : [${sprite.origin.x}, ${sprite.origin.y}]';
 		var angle:String = showRadsCheck ? Std.string(sprite.angle * FlxAngle.TO_RAD).substring(0, 6) : Std.string(sprite.angle);
 		angleText.text = 'angle : [${angle}]';
-		alphaText.text = 'alpha : [${sprite.alpha}]';
+		alphaText.text = 'alpha : [${Std.string(sprite.alpha).substring(0,5)}]';
 		updateSkewText();
 
 	}

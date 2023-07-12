@@ -32,6 +32,9 @@ class Sprite extends FlxState
 		 * Replace 'DinoSprite' with the name of your custom FlxSprite class.
 		 */
 		sprite = new DinoSpriteSkewed();
+		
+		//sprite = new AdventurerSkewed(); //another cool sprite to test
+		
 		add(sprite);
 		sprite.screenCenter();
 	}

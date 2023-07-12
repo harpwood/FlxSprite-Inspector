@@ -9,7 +9,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		trace("Hello from openfl!");
+		//trace("Hello from openfl!");
 
 		// Prevent the web page from being scrolled by the mouse wheel within the application frame
 		#if html5
