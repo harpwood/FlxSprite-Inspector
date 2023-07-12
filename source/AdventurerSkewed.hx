@@ -1,4 +1,4 @@
-package inspector;
+package;
 
 import flixel.addons.effects.FlxSkewedSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
