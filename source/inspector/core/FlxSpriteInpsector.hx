@@ -633,14 +633,14 @@ class FlxSpriteInpsector extends Sprite
 	{
 		decreaseAlphaSpriteBtn.toggled = false;
 		sprite.alpha = Math.max(0, sprite.alpha - 0.1);
-		alphaInput.text = Std.string(sprite.alpha);
+		alphaInput.text = Std.string(sprite.alpha).substring(0, 5);	
 	}
 
 	function increaseAlpha():Void
 	{
 		increaseAlphaSpriteBtn.toggled = false;
 		sprite.alpha = Math.min(1, sprite.alpha + 0.1);
-		alphaInput.text = Std.string(sprite.alpha);
+		alphaInput.text = Std.string(sprite.alpha).substring(0, 5);
 	}
 
 	function toggleHelp():Void
@@ -955,7 +955,7 @@ class FlxSpriteInpsector extends Sprite
 			if (key == FlxInputText.ENTER_ACTION)
 			{
 				sprite.alpha = Math.min(1, Std.parseFloat(input));
-				alphaInput.text = Std.string(sprite.alpha);
+				alphaInput.text = Std.string(sprite.alpha).substring(0, 4);
 
 				alphaInput.hasFocus = false;
 			}
