@@ -23,7 +23,7 @@ class Adventurer extends FlxSprite
 	{
 		super(X, Y, SimpleGraphic);
 		
-		loadGraphic("assets/images/adventurer.png", true, 50, 37);
+		loadGraphic("assets/inspector/adventurer.png", true, 50, 37);
 		
 		/** 
 		 * The following code created automatically with an Aseprite lua script
